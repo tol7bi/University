@@ -1,7 +1,10 @@
 package Data;
 import User.*;
-public class Message extends Data{
-	private String receiver;
+
+import java.io.Serializable;
+
+public class Message extends Data implements Serializable {
+	private Employee receiver;
 	
 	public Message() {
         super();
@@ -19,18 +22,11 @@ public class Message extends Data{
         super(author, title, text);
     }
 
-    public Message(User author, String title, String text, String receiver) {
+    public Message(User author, String title, String text, Employee receiver) {
         super(author, title, text);
         this.receiver = receiver;
     }
 
-    public void setReceiver(String receiver) {
-    	this.receiver = receiver;
-    }
-    
-    public String getReceiver() {
-    	return this.receiver;
-    }
     @Override
     public String toString() {
         return "Message{" +
@@ -39,5 +35,13 @@ public class Message extends Data{
                 ", text='" + getText() + '\'' +
                 ", receiver='" + getReceiver() + '\'' +
                 '}';
+    }
+
+    public Employee getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(Employee receiver) {
+        this.receiver = receiver;
     }
 }

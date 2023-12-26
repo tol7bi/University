@@ -3,19 +3,22 @@ import java.util.*;
 import User.*;
 import java.io.*;
 public class Database implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private static Database INSTANCE;
 	private HashSet<Student> Students = new HashSet<Student>();
 	private HashSet<Employee> Employees = new HashSet<Employee>();
 	private HashSet<Message> Messages = new HashSet<Message>();
-	private HashSet<User> Users = new HashSet<User>();
-	private HashSet<Admin> Admins = new HashSet<Admin>();
+	private Vector<Message> News = new Vector<Message>();
+	private static Vector<User> Users = new Vector<User>();
+	private static HashSet<Admin> Admins = new HashSet<Admin>();
 	private HashSet<Research> Researches = new HashSet<Research>();
 
-	// Load or create database
+
 	static{
 		if(new File("university_db.ser").exists()) {
 			try {
 				INSTANCE = loadDB();
+				System.out.println("Loaded");
 			}
 			catch(Exception serializationError) {
 				serializationError.printStackTrace();
@@ -23,30 +26,78 @@ public class Database implements Serializable{
 		}
 		else {
 			INSTANCE = new Database();
+			Admin defaultAdmin = new Admin("admin", "admin", "Name", "Surname");
+			Admins.add(defaultAdmin);
+			Users.add(defaultAdmin);
 		}
 	}
-
-
 	private Database() {
+
 	}
+
+
+	public void login(){
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+		User authenticatedUser = null;
+
+		authentication:
+		while(true) {
+			try {
+				for(User u : INSTANCE.getUsers()){
+					System.out.println(u);
+				}
+				System.out.println("Login: ");
+				String login = reader.readLine();
+
+				System.out.println("Password: ");
+				String password = reader.readLine();
+
+				for(User u : INSTANCE.getUsers()) {
+					if(login.equals(u.getLogin()) && password.equals(u.getPassword())) {
+						authenticatedUser = u;
+						break authentication;
+					}
+				}
+
+				System.out.println("Invalid input");
+
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+
+			}
+
+		}
+
+		authenticatedUser.viewMenu();
+	}
+
+
 	public static Database getINSTANCE(){
 		return INSTANCE;
 	}
 
 	private static Database loadDB() throws IOException, ClassNotFoundException {
-		ObjectInputStream dbObject = new ObjectInputStream(new FileInputStream("university_db.ser"));
-		return (Database) dbObject.readObject();
+		try (ObjectInputStream loadedDb = new ObjectInputStream(new FileInputStream("university_db.ser"))) {
+			Database tmp = (Database) loadedDb.readObject();
+			System.out.println(tmp);
+			return tmp;
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+			System.out.println("Error");
+		}
+		return null;
 	}
 
-	public void saveDatabase() throws IOException {
-		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("database.ser"));
-		oos.writeObject(INSTANCE);
-		oos.close();
-	}
 
-	private void initializeDefaultAdmin() {
-		Admin defaultAdmin = new Admin("admin", "admin", "AdminName", "AdminSurname");
-		addAdmin(defaultAdmin);
+	public void saveDb() throws IOException {
+
+		ObjectOutputStream outputDb = new ObjectOutputStream(new FileOutputStream("university_db.ser"));
+		outputDb.writeObject(this.getINSTANCE());
+		outputDb.close();
+		System.out.println("Data saved");
+
 	}
 
 	public void addAdmin(Admin a){
@@ -56,6 +107,7 @@ public class Database implements Serializable{
 	
 	public void addStudent(Student student) {
 		Students.add(student);
+		Users.add(student);
 		
 	}
 	public HashSet<Student> getStudents() {
@@ -66,6 +118,7 @@ public class Database implements Serializable{
 	}
 	public void addEmployee(Employee employee) {
 		Employees.add(employee);
+		Users.add(employee);
 		
 	}
 	public HashSet <Employee> getEmployees() {
@@ -92,8 +145,22 @@ public class Database implements Serializable{
 	public void setResearches(HashSet<Research> researches) {
 		Researches = researches;
 	}
-	public HashSet<User> getUsers(){
+	public Vector<User> getUsers(){
 		return this.Users;
 	}
-	
+
+	public Vector<Message> getNews() {
+		return News;
+	}
+
+	public void setNews(Vector<Message> news) {
+		News = news;
+	}
+	public void addNews(Message m) {
+		News.add(m);
+	}
+	public String toString(){
+		return this.Users.size() + " ";
+	}
+
 }

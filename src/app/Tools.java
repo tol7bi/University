@@ -17,11 +17,12 @@ public class Tools {
                 break;
             } else {
                 System.out.println("Invalid input!");
-                input = scanner.nextLine();
+                scanner.nextLine();
                 matcher = regex.matcher(input);
             }
+
         }
-        scanner.close();
+
         return input;
 
     }
@@ -29,22 +30,25 @@ public class Tools {
     public static int validateInt(int range) {
         Scanner scanner = new Scanner(System.in);
         int input;
-        while (true) {
+        while(true) {
             try {
                 input = scanner.nextInt();
-                if (input >= 0 && range >= input) {
-                    scanner.close();
-                    return input;
-                } else {
-                    System.out.println("Invalid input!");
+                if (0 <= input && input <= range) {
+                    break;
+                }
+                else {
+                    System.out.println("Out of range");
                 }
 
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a valid number.");
+            }
+            catch (InputMismatchException e) {
+                System.out.println("Invalid input");
                 scanner.nextLine();
             }
 
         }
+        return input;
+
 
     }
 

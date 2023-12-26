@@ -2,6 +2,7 @@ package Data;
 
 import User.User;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 import User.*;
@@ -17,36 +18,34 @@ public class Admin extends User implements Serializable {
 
 	@Override
 	public void updateInfo() {
-
+		super.updateInfo();
 	}
 
 
 	public void createUser() {
-		System.out.println("Which user do you want to create?");
-		Vector<String> choices = new Vector<String>(
-				Arrays.asList("Student", "Graduate Student", "Researcher", "Employee", "Teacher", "Manager", "Tech Support Specialist", "Dean"));
-
-		for (int i = 0; i < choices.size(); i++) {
-			System.out.println(i+1 + ": " + choices.get(i));
-		}
-
-		System.out.println("Enter 0 to return back.");
 		Scanner scanner = new Scanner(System.in);
-		int choice = scanner.nextInt();
+		System.out.println("Which user do you want to create?");
+		String userChoice = "1-Student\n2-Graduate Student\n3-Researcher\n4-Employee\n5-Teacher\n6-Manager\n7-Tech Support\n8-Dean";
+		System.out.println(userChoice);
+		System.out.println("Enter 0 to return back.");
 
-		if(choice == 0) {
+		int input = Tools.validateInt(8);
+
+
+		if(input == 0) {
 			return;
 		}
-		else if(choice>=1 && choice<=2) {
-			StudentFactory studentFactory = new StudentFactory();
-			studentFactory.getStudent(choice+1);
+		else if(input>=1 && input<=2) {
+			UserFactory studentFactory = new UserFactory();
+			studentFactory.getNewUser(input);
+
 		}
-		else if(choice == 3) {
-			addResearcher();
+		else if(input == 3) {
+			//addResearcher();
 		}
-		else if(choice >= 4) {
-			EmployeeFactory employeeFactory = new EmployeeFactory();
-			employeeFactory.getEmployee(choice+1);
+		else if(input >= 4) {
+			UserFactory employeeFactory = new UserFactory();
+			employeeFactory.getNewUser(input+1);
 		}
 	}
 
@@ -89,71 +88,47 @@ public class Admin extends User implements Serializable {
 
 	}
 
-	public void seeLogFiles() {
-		System.out.println("Enter 0 to return back");
-		System.out.println("Choose user to see logs:");
 
-		Vector<User> users = Database.getInstance().getUsers();
-
-		StaticMethods.printList(users);
-
-		int choice = StaticMethods.validate(users.size());
-
-		if(choice==0) {
-			return;
-		}
-
-		User u = users.get(choice-1);
-
-		Vector<Log> logs = Database.getInstance().seeLogs(u);
-
-		if(logs==null) {
-			System.out.println("No logs for this user.");
-			return;
-		}
-
-		StaticMethods.printList(logs);
-	}
 
 	@Override
 	public void viewMenu() {
 
-		String[] options = new String[] {
-				"Create new user", "See all users", "Update info of user", "Remove user", "See log files","View one news", "Exit"
-		};
+
+		String menu = "1-Create new user\n2-See all users\n3-Update user info\n4-Remove user\n5-See log files\n7-View news\n8-Exit";
+
 
 		while(true) {
 			System.out.println();
-			System.out.println("----Admin Menu----");
-			StaticMethods.printList(List.of(options));
-			int choice = StaticMethods.validate(options.length);
+			System.out.println("Admin Menu");
+			System.out.println(menu);
+			int input  = Tools.validateInt(8);
 
-			if(choice == 1) {
+			if(input == 1) {
 				createUser();
 			}
 
-			else if(choice == 2) {
+			else if(input == 2) {
 				seeAllUsers();
 			}
 
-			else if(choice == 3) {
+			else if(input == 3) {
 				updateUser();
 			}
 
-			else if(choice == 4) {
+			else if(input == 4) {
 				removeUser();
 			}
-			else if (choice == 5) {
-				seeLogFiles();
+			else if (input == 5) {
+
 			}
-			else if (choice == 6) {
-				viewOneNews();
+			else if (input == 6) {
+				super.viewNews();
 			}
-			else if(choice == 7) {
+			else if(input == 8) {
 				try {
-					Database.getInstance().saveDatabase();
+					Database.getINSTANCE().saveDb();
+					System.out.println("Good Luck!");
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				break;
@@ -174,10 +149,6 @@ public class Admin extends User implements Serializable {
 	}
 
 
-	@Override
-	public void changeInfo() {
-
-	}
 
 
 }

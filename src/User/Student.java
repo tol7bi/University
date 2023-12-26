@@ -1,10 +1,14 @@
 package User;
+import Data.Database;
 import app.Tools;
 import Course.*;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
 public class Student extends User implements Serializable, Comparable<Student>{
+	private static final long serialVersionUID = 3L;
 
 	// fields of Student
 	private String fullName;
@@ -29,34 +33,32 @@ public class Student extends User implements Serializable, Comparable<Student>{
 
 	@Override
 	public void updateInfo() {
-		System.out.println("What do you want to change?");
-
-
-		System.out.println("What do you want to change?");
-		System.out.println("What do you want to change?\n1 - login\n2-password\n3-first name \n 4- last name");
+		Scanner in = new Scanner(System.in);
+		System.out.println("What do you want to change?\n1 - login\n2-password\n3-first name\n4- last name\n5-transfer to another faculty");
 
 		System.out.println("Enter 0 to return back");
-		int choice = Tools.validateInt(4);
-		Scanner in = new Scanner(System.in);
+		int input = Tools.validateInt(5);
 
-		if(choice == 0) {
+
+		if(input == 0) {
 			return;
 		}
-		else if(choice == 1) {
+		else if(input == 1) {
+
 			System.out.println("Enter new username");
 			String newLogin = in.nextLine();
 			this.setLogin(newLogin);
 		}
-		else if(choice == 2) {
+		else if(input == 2) {
 			System.out.println("Enter new password");
 			String newPassword = in.nextLine();
 			this.setPassword(newPassword);
 		}
-		else if(choice == 3) {
+		else if(input == 3) {
 			String firstName = Tools.regexValidation( "[a-zA-Z]+");
 			this.setFirstName(firstName);
 		}
-		else if(choice == 4) {
+		else if(input == 4) {
 			String lastName = Tools.regexValidation("[a-zA-Z]+");
 			this.setLastName(lastName);
 		}
@@ -66,6 +68,51 @@ public class Student extends User implements Serializable, Comparable<Student>{
 	@Override
 	public void viewMenu() {
 
+
+		String menu = "1 - View Info\n2 - Update info\n3-Rate Teachers\n4-view Transcript\n5-Organisation\n6-View news\n7-Check Attendance\n8-Exit";
+
+
+		while(true) {
+			System.out.println();
+			System.out.println("Student Menu");
+			System.out.println(menu);
+			int input  = Tools.validateInt(8);
+
+			if(input == 1) {
+				viewInfo();
+			}
+
+			else if(input == 2) {
+				updateInfo();
+			}
+
+			else if(input == 3) {
+				//rate teachers
+
+			}
+
+			else if(input == 4) {
+				viewMarks();
+			}
+			else if (input == 5) {
+				if(organization.equals(null)){
+					System.out.println("No organization");
+
+				}
+			}
+			else if (input == 6) {
+
+			}
+			else if(input == 7) {
+
+			}
+
+		}
+
+	}
+
+	private void viewInfo() {
+		System.out.println(this);
 	}
 
 	public Faculty getFaculty() {
@@ -97,7 +144,6 @@ public class Student extends User implements Serializable, Comparable<Student>{
 		return courses;
 	}
 
-	//register for some course
 	public void registerCourse(Course course) {
 		courses.add(course);
 		System.out.println(getFullName() + " has registered for course : " +  course.getCourseName());
@@ -140,8 +186,6 @@ public class Student extends User implements Serializable, Comparable<Student>{
     public void joinOrganization(Organization organization) {
         this.organization = organization;
     }
-    
-    // leave organization if you contain in 
     public void leaveOrganization(Organization organization) {
         if (organization.getMembers().contains(this)) {
             organization.getMembers().remove(this);

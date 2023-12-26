@@ -1,15 +1,18 @@
 package User;
 import java.util.*;
 import Data.*;
+import app.Tools;
+
 import java.io.Serializable;
 public abstract class User implements Serializable{
+	private static final long serialVersionUID = 2L;
 	private int id = 1;
 	private String email;
 	private String login;
 	private String password;
 	private String firstName;
 	private String lastName;
-	private Vector<String> messages;
+	private Vector<Message> news = new Vector<Message>();
 	//private Vector<ResearchJournal> journals;
 
 
@@ -28,7 +31,7 @@ public abstract class User implements Serializable{
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.messages = new Vector<>();
+		this.news = new Vector<>();
 
 		//this.journals = new Vector<>();
 		this.email = login + "@kbtu.kz";
@@ -37,12 +40,41 @@ public abstract class User implements Serializable{
 	public void viewNews(){
 
 	}
-	public abstract void updateInfo();
+	public void updateInfo(){
+		System.out.println("What do you want to change?\n1 - login\n2-password\n3-first name \n 4- last name");
+
+		System.out.println("Enter 0 to return back");
+		int choice = Tools.validateInt(4);
+		Scanner in = new Scanner(System.in);
+
+		if(choice == 0) {
+			return;
+		}
+		else if(choice == 1) {
+			System.out.println("Enter new username");
+			String newLogin = in.nextLine();
+			this.setLogin(newLogin);
+		}
+		else if(choice == 2) {
+			System.out.println("Enter new password");
+			String newPassword = in.nextLine();
+			this.setPassword(newPassword);
+		}
+		else if(choice == 3) {
+			String firstName = Tools.regexValidation( "[a-zA-Z]+");
+			this.setFirstName(firstName);
+		}
+		else if(choice == 4) {
+			String lastName = Tools.regexValidation("[a-zA-Z]+");
+			this.setLastName(lastName);
+		}
+	}
 
 
 	public String getFullName() {
 		return firstName + " " + lastName;
 	}
+
 	public String getFirstName(){
 		return this.firstName;
 	}
@@ -81,7 +113,7 @@ public abstract class User implements Serializable{
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		User user = (User) o;
-		return id == user.id && login.equals(user.login) && password.equals(user.password) && firstName.equals(user.firstName) && lastName.equals(user.lastName);
+		return login.equals(user.login) && password.equals(user.password);
 	}
 
 	@Override

@@ -1,15 +1,14 @@
 package User;
 
 import java.util.Scanner;
-import java.util.InputMismatchException;
 
 import Data.Database;
 import app.Tools;
 
 
-public class StudentFactory {
+public class UserFactory {
 
-    public Student getStudent(int choice) {
+    public Student getNewUser(int choice) {
         if(choice == 1) {
             return addStudent();
         }
@@ -37,9 +36,7 @@ public class StudentFactory {
         Faculty faculty = faculties[Tools.validateInt(faculties.length) - 1];
         Student s = new Student(username, password, FirstName, lastName, faculty);
         Database.getINSTANCE().addStudent(s);
-            System.out.println("Student added " + s);
-
-
+        System.out.println("Student added " + s);
         return s;
 
     }
@@ -61,14 +58,17 @@ public class StudentFactory {
         System.out.println("Choose faculty:");
 
 
-        System.out.println("Choose faculty:");
-
-
         Faculty[] faculties = Faculty.values();
+        for(int i = 0; i < faculties.length; i++){
+            System.out.println(i + 1 +  " " + faculties[i]);
+        }
         Faculty faculty = faculties[Tools.validateInt(faculties.length) - 1];
 
 
         Degree[] degrees = Degree.values();
+        for(int i = 0; i < degrees.length; i++){
+            System.out.println(i + 1 +  " " + degrees[i]);
+        }
         Degree degree = degrees[Tools.validateInt(degrees.length) - 1];
 
         Student newGraduateStudent = new GraduateStudent(username, password, FirstName, lastName, faculty, degree);

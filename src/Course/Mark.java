@@ -2,11 +2,12 @@ package Course;
 
 public class Mark {
     private Course course;
+    private double firstAttestation;
+    private double secondAttestation;
+    private double finalExam;
     private double markPercentage;
 
-    public Mark() {
 
-    }
     public Mark(Course course, double mark) {
         this.course = course;
         this.markPercentage = mark;

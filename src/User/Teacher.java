@@ -48,7 +48,11 @@ public class Teacher extends Employee{
 	}
 	
     public void putMarks(Mark mark, Course course, Student student) {
+        /*
+        1)Match student
+        2)
 
+         */
     }
 	
 	public void checkAttendance() {
